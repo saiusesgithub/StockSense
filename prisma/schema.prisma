@@ -7,10 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole { ADMIN MANAGER OPERATOR }
-enum DocumentStatus { DRAFT WAITING READY DONE CANCELED }
-enum MovementType { RECEIPT DELIVERY TRANSFER ADJUSTMENT }
-enum ReferenceType { RECEIPT DELIVERY TRANSFER ADJUSTMENT }
+enum UserRole {
+  ADMIN
+  MANAGER
+  OPERATOR
+}
+
+enum DocumentStatus {
+  DRAFT
+  WAITING
+  READY
+  DONE
+  CANCELED
+}
+
+enum MovementType {
+  RECEIPT
+  DELIVERY
+  TRANSFER
+  ADJUSTMENT
+}
+
+enum ReferenceType {
+  RECEIPT
+  DELIVERY
+  TRANSFER
+  ADJUSTMENT
+}
 
 model User {
   id             String          @id @default(cuid())
