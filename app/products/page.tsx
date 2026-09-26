@@ -1,2 +1,12 @@
-import { PlaceholderPage } from "@/components/placeholder-page";
-export default function ProductsPage() { return <PlaceholderPage title="Products" description="Manage your product catalog, SKUs, units of measure, and reorder thresholds." />; }
+import Link from "next/link";
+import { Plus, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getProducts } from "@/lib/inventory/queries";
+
+export const dynamic = "force-dynamic";
+
+export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ search?: string }> }) {
+  const search = (await searchParams).search ?? "";
+  const products = await getProducts({ search });
+  return <div className="space-y-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-medium text-slate-500">Inventory</p><h1 className="mt-1 text-3xl font-semibold tracking-tight">Products</h1><p className="mt-2 text-sm text-slate-500">Manage products, stock thresholds, and location availability.</p></div><Button asChild><Link href="/products/new"><Plus className="mr-2 h-4 w-4" />New product</Link></Button></div><form className="flex max-w-md items-center gap-2"><div className="relative flex-1"><Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" /><input name="search" defaultValue={search} placeholder="Search by name, SKU, or category" className="h-10 w-full rounded-md border bg-white pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-slate-300" /></div><Button type="submit" variant="outline">Search</Button></form><div className="overflow-hidden rounded-lg border bg-white"><table className="w-full text-left text-sm"><thead className="border-b bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-5 py-3">Product</th><th className="px-5 py-3">Category</th><th className="px-5 py-3">Unit</th><th className="px-5 py-3 text-right">Total stock</th><th className="px-5 py-3">Status</th></tr></thead><tbody className="divide-y">{products.map((product) => <tr key={product.id} className="hover:bg-slate-50"><td className="px-5 py-4"><Link href={`/products/${product.id}`} className="font-medium text-slate-900 hover:underline">{product.name}</Link><p className="mt-1 text-xs text-slate-500">{product.sku}</p></td><td className="px-5 py-4 text-slate-600">{product.category.name}</td><td className="px-5 py-4 text-slate-600">{product.unitOfMeasure}</td><td className="px-5 py-4 text-right font-medium text-slate-900">{product.totalStock}</td><td className="px-5 py-4">{product.isLowStock ? <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700">Low stock</span> : <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">Healthy</span>}</td></tr>)}</tbody></table>{products.length === 0 ? <p className="p-10 text-center text-sm text-slate-500">No products found.</p> : null}</div></div>;
+}
