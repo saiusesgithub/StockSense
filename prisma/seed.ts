@@ -14,16 +14,16 @@ async function main() {
     prisma.location.upsert({ where: { code: "SECONDARY-STOCK" }, update: {}, create: { name: "Secondary Stock", code: "SECONDARY-STOCK", warehouseId: secondary.id } }),
   ]);
   const products = [
-    { sku: "RM-STEEL-001", name: "Steel Rod", unitOfMeasure: "kg", reorderLevel: 100, categoryId: categories[4].id, quantity: 850 },
-    { sku: "FUR-CHAIR-001", name: "Office Chair", unitOfMeasure: "units", reorderLevel: 20, categoryId: categories[1].id, quantity: 42 },
-    { sku: "ELEC-LAP-001", name: "Laptop", unitOfMeasure: "units", reorderLevel: 10, categoryId: categories[2].id, quantity: 8 },
-    { sku: "SAFE-HELM-001", name: "Safety Helmet", unitOfMeasure: "units", reorderLevel: 30, categoryId: categories[0].id, quantity: 65 },
-    { sku: "PKG-BOX-001", name: "Packing Box", unitOfMeasure: "units", reorderLevel: 100, categoryId: categories[3].id, quantity: 240 },
+    { sku: "RM-STEEL-001", name: "Steel Rod", unitOfMeasure: "kg", reorderLevel: 100, categoryId: categories[4].id, initialQuantity: 850 },
+    { sku: "FUR-CHAIR-001", name: "Office Chair", unitOfMeasure: "units", reorderLevel: 20, categoryId: categories[1].id, initialQuantity: 42 },
+    { sku: "ELEC-LAP-001", name: "Laptop", unitOfMeasure: "units", reorderLevel: 10, categoryId: categories[2].id, initialQuantity: 8 },
+    { sku: "SAFE-HELM-001", name: "Safety Helmet", unitOfMeasure: "units", reorderLevel: 30, categoryId: categories[0].id, initialQuantity: 65 },
+    { sku: "PKG-BOX-001", name: "Packing Box", unitOfMeasure: "units", reorderLevel: 100, categoryId: categories[3].id, initialQuantity: 240 },
   ];
   for (const item of products) {
-    const { quantity, ...productData } = item;
+    const { initialQuantity, ...productData } = item;
     const product = await prisma.product.upsert({ where: { sku: item.sku }, update: productData, create: productData });
-    await prisma.inventoryBalance.upsert({ where: { productId_locationId: { productId: product.id, locationId: locations[0].id } }, update: { quantity: item.quantity }, create: { productId: product.id, locationId: locations[0].id, quantity: item.quantity } });
+    await prisma.inventoryBalance.upsert({ where: { productId_locationId: { productId: product.id, locationId: locations[0].id } }, update: { quantity: initialQuantity }, create: { productId: product.id, locationId: locations[0].id, quantity: initialQuantity } });
   }
   console.log(`Seeded ${products.length} products, ${locations.length} locations, and demo user ${admin.email}.`);
 }
