@@ -1,0 +1,9 @@
+import Link from "next/link";
+import { Boxes, ClipboardList, LayoutDashboard, Package, Settings2, Truck, Warehouse, ArrowRightLeft, SlidersHorizontal } from "lucide-react";
+const groups = [
+  { label: "Workspace", items: [{ label: "Dashboard", href: "/dashboard", icon: LayoutDashboard }] },
+  { label: "Inventory", items: [{ label: "Products", href: "/products", icon: Package }, { label: "Stock Ledger", href: "/stock-ledger", icon: ClipboardList }] },
+  { label: "Operations", items: [{ label: "Receipts", href: "/receipts", icon: Boxes }, { label: "Deliveries", href: "/deliveries", icon: Truck }, { label: "Transfers", href: "/transfers", icon: ArrowRightLeft }, { label: "Adjustments", href: "/adjustments", icon: SlidersHorizontal }] },
+  { label: "Configuration", items: [{ label: "Warehouses", href: "/warehouses", icon: Warehouse }, { label: "Settings", href: "/settings", icon: Settings2 }] },
+];
+export function Sidebar() { return <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white lg:block"><div className="flex h-16 items-center gap-3 border-b border-slate-200 px-6"><div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">S</div><span className="text-lg font-semibold tracking-tight">StockSense</span></div><nav className="space-y-7 px-3 py-6">{groups.map((group) => <div key={group.label}><p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">{group.label}</p><div className="space-y-1">{group.items.map(({ label, href, icon: Icon }) => <Link key={href} href={href} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"><Icon className="h-4 w-4" />{label}</Link>)}</div></div>)}</nav></aside>; }
